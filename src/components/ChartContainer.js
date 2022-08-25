@@ -1,17 +1,11 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  forwardRef,
-  useImperativeHandle
-} from "react";
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import PropTypes from "prop-types";
 import { selectNodeService } from "./service";
 import JSONDigger from "json-digger";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import ChartNode from "./ChartNode";
-import "./ChartContainer.css";
+// import "./ChartContainer.css";
 
 const propTypes = {
   datasource: PropTypes.object.isRequired,
@@ -26,7 +20,7 @@ const propTypes = {
   collapsible: PropTypes.bool,
   multipleSelect: PropTypes.bool,
   onClickNode: PropTypes.func,
-  onClickChart: PropTypes.func
+  onClickChart: PropTypes.func,
 };
 
 const defaultProps = {
@@ -38,7 +32,7 @@ const defaultProps = {
   chartClass: "",
   draggable: false,
   collapsible: true,
-  multipleSelect: false
+  multipleSelect: false,
 };
 
 const ChartContainer = forwardRef(
@@ -56,7 +50,7 @@ const ChartContainer = forwardRef(
       collapsible,
       multipleSelect,
       onClickNode,
-      onClickChart
+      onClickChart,
     },
     ref
   ) => {
@@ -74,10 +68,9 @@ const ChartContainer = forwardRef(
     const [download, setDownload] = useState("");
 
     const attachRel = (data, flags) => {
-      data.relationship =
-        flags + (data.children && data.children.length > 0 ? 1 : 0);
+      data.relationship = flags + (data.children && data.children.length > 0 ? 1 : 0);
       if (data.children) {
-        data.children.forEach(function(item) {
+        data.children.forEach(function (item) {
           attachRel(item, "1" + (data.children.length > 1 ? 1 : 0));
         });
       }
@@ -91,7 +84,7 @@ const ChartContainer = forwardRef(
 
     const dsDigger = new JSONDigger(datasource, "id", "children");
 
-    const clickChartHandler = event => {
+    const clickChartHandler = (event) => {
       if (!event.target.closest(".oc-node")) {
         if (onClickChart) {
           onClickChart();
@@ -105,7 +98,7 @@ const ChartContainer = forwardRef(
       setCursor("default");
     };
 
-    const panHandler = e => {
+    const panHandler = (e) => {
       let newX = 0;
       let newY = 0;
       if (!e.targetTouches) {
@@ -123,9 +116,7 @@ const ChartContainer = forwardRef(
         if (transform.indexOf("3d") === -1) {
           setTransform("matrix(1,0,0,1," + newX + "," + newY + ")");
         } else {
-          setTransform(
-            "matrix3d(1,0,0,0,0,1,0,0,0,0,1,0," + newX + ", " + newY + ",0,1)"
-          );
+          setTransform("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0," + newX + ", " + newY + ",0,1)");
         }
       } else {
         let matrix = transform.split(",");
@@ -140,7 +131,7 @@ const ChartContainer = forwardRef(
       }
     };
 
-    const panStartHandler = e => {
+    const panStartHandler = (e) => {
       if (e.target.closest(".oc-node")) {
         setPanning(false);
         return;
@@ -173,7 +164,7 @@ const ChartContainer = forwardRef(
       }
     };
 
-    const updateChartScale = newScale => {
+    const updateChartScale = (newScale) => {
       let matrix = [];
       let targetScale = 1;
       if (transform === "") {
@@ -198,7 +189,7 @@ const ChartContainer = forwardRef(
       }
     };
 
-    const zoomHandler = e => {
+    const zoomHandler = (e) => {
       let newScale = 1 + (e.deltaY > 0 ? -0.2 : 0.2);
       updateChartScale(newScale);
     };
@@ -211,12 +202,12 @@ const ChartContainer = forwardRef(
           ? new jsPDF({
               orientation: "landscape",
               unit: "px",
-              format: [canvasWidth, canvasHeight]
+              format: [canvasWidth, canvasHeight],
             })
           : new jsPDF({
               orientation: "portrait",
               unit: "px",
-              format: [canvasHeight, canvasWidth]
+              format: [canvasHeight, canvasWidth],
             });
       doc.addImage(canvas.toDataURL("image/jpeg", 1.0), "JPEG", 0, 0);
       doc.save(exportFilename + ".pdf");
@@ -227,8 +218,7 @@ const ChartContainer = forwardRef(
       const isFf = !!window.sidebar;
       const isEdge =
         navigator.appName === "Microsoft Internet Explorer" ||
-        (navigator.appName === "Netscape" &&
-          navigator.appVersion.indexOf("Edge") > -1);
+        (navigator.appName === "Netscape" && navigator.appVersion.indexOf("Edge") > -1);
 
       if ((!isWebkit && !isFf) || isEdge) {
         window.navigator.msSaveBlob(canvas.msToBlob(), exportFilename + ".png");
@@ -257,12 +247,12 @@ const ChartContainer = forwardRef(
         html2canvas(chart.current, {
           width: chart.current.clientWidth,
           height: chart.current.clientHeight,
-          onclone: function(clonedDoc) {
+          onclone: function (clonedDoc) {
             clonedDoc.querySelector(".orgchart").style.background = "none";
             clonedDoc.querySelector(".orgchart").style.transform = "";
-          }
+          },
         }).then(
-          canvas => {
+          (canvas) => {
             if (exportFileextension.toLowerCase() === "pdf") {
               exportPDF(canvas, exportFilename);
             } else {
@@ -281,17 +271,11 @@ const ChartContainer = forwardRef(
       },
       expandAllNodes: () => {
         chart.current
-          .querySelectorAll(
-            ".oc-node.hidden, .oc-hierarchy.hidden, .isSiblingsCollapsed, .isAncestorsCollapsed"
-          )
-          .forEach(el => {
-            el.classList.remove(
-              "hidden",
-              "isSiblingsCollapsed",
-              "isAncestorsCollapsed"
-            );
+          .querySelectorAll(".oc-node.hidden, .oc-hierarchy.hidden, .isSiblingsCollapsed, .isAncestorsCollapsed")
+          .forEach((el) => {
+            el.classList.remove("hidden", "isSiblingsCollapsed", "isAncestorsCollapsed");
           });
-      }
+      },
     }));
 
     return (
@@ -321,12 +305,7 @@ const ChartContainer = forwardRef(
             />
           </ul>
         </div>
-        <a
-          className="oc-download-btn hidden"
-          ref={downloadButton}
-          href={dataURL}
-          download={download}
-        >
+        <a className="oc-download-btn hidden" ref={downloadButton} href={dataURL} download={download}>
           &nbsp;
         </a>
         <div className={`oc-mask ${exporting ? "" : "hidden"}`}>

@@ -1,5 +1,5 @@
 {
-  "name": "@dabeng/react-orgchart",
+  "name": "react-orgchart",
   "version": "1.0.0",
   "main": "./dist/ChartContainer.js",
   "files": [
@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dabeng/react-orgchart.git"
+    "url": "https://github.com/aslamjon/react-orgchart.git"
   },
   "keywords": [
     "react",
@@ -25,7 +25,7 @@
   "bugs": {
     "url": "https://github.com/dabeng/react-orgchart/issues"
   },
-  "homepage": "https://github.com/dabeng/react-orgchart#readme",
+  "homepage": "https://github.com/aslamjon/react-orgchart",
   "babel": {
     "presets": [
       "@babel/preset-env",
@@ -42,7 +42,9 @@
     "rxjs": "^6.5.4"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.0",
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.18.13",
+    "@babel/preset-env": "^7.18.10",
     "@babel/preset-react": "^7.8.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
